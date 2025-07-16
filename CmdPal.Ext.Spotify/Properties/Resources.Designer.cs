@@ -115,6 +115,24 @@ namespace CmdPal.Ext.Spotify.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter Wildcard.
+        /// </summary>
+        internal static string ExtensionSettingFilterWildcard {
+            get {
+                return ResourceManager.GetString("ExtensionSettingFilterWildcard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter wildcard character used to prepend a filter, e.g. /album or !album.
+        /// </summary>
+        internal static string ExtensionSettingFilterWildcardDescription {
+            get {
+                return ResourceManager.GetString("ExtensionSettingFilterWildcardDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
         internal static string ResultAlbumSubTitle {
@@ -300,6 +318,69 @@ namespace CmdPal.Ext.Spotify.Properties {
         internal static string ResultTurnOnShuffleTitle {
             get {
                 return ResourceManager.GetString("ResultTurnOnShuffleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to album.
+        /// </summary>
+        internal static string SearchTypeAlbum {
+            get {
+                return ResourceManager.GetString("SearchTypeAlbum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to artist.
+        /// </summary>
+        internal static string SearchTypeArtist {
+            get {
+                return ResourceManager.GetString("SearchTypeArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to audiobook.
+        /// </summary>
+        internal static string SearchTypeAudiobook {
+            get {
+                return ResourceManager.GetString("SearchTypeAudiobook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to episode.
+        /// </summary>
+        internal static string SearchTypeEpisode {
+            get {
+                return ResourceManager.GetString("SearchTypeEpisode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to playlist.
+        /// </summary>
+        internal static string SearchTypePlaylist {
+            get {
+                return ResourceManager.GetString("SearchTypePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to show.
+        /// </summary>
+        internal static string SearchTypeShow {
+            get {
+                return ResourceManager.GetString("SearchTypeShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to track.
+        /// </summary>
+        internal static string SearchTypeTrack {
+            get {
+                return ResourceManager.GetString("SearchTypeTrack", resourceCulture);
             }
         }
     }
