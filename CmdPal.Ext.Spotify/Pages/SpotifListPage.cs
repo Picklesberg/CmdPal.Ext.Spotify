@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CmdPal.Ext.Spotify.Commands;
 using CmdPal.Ext.Spotify.Helpers;
 using CmdPal.Ext.Spotify.Properties;
@@ -108,6 +109,8 @@ internal sealed partial class SpotifyListPage : DynamicListPage
 
         var searchFilter = ApplySearchFilter(ref search);
 
+        try
+        {
         if (string.IsNullOrEmpty(search.Trim()))
         {
             if (searchFilter != SearchRequest.Types.All) EmptyContent = new CommandItem()
@@ -115,11 +118,52 @@ internal sealed partial class SpotifyListPage : DynamicListPage
                 Title = Resources.EmptyFilteredResultsTitle,
             };
             else EmptyContent = _defaultEmptyContent;
+
+                var currentStatus = await _spotifyClient.Player.GetCurrentPlayback(new ());
+
+                // after some time paused, the API goes idle and returns nothing instead of an 'inactive' state
+                // TODO: cache last known state? Could easily go out of sync. 'Queue' could make up the difference.
+                if (currentStatus != null && currentStatus.Device.IsActive)
+                {
+                    if (currentStatus.CurrentlyPlayingType == "track")
+                    {
+                        if (currentStatus.Item is FullTrack)
+                        {
+                            var track = currentStatus.Item as FullTrack;
+                            return [new ListItem(new TogglePlaybackCommand(_spotifyClient))
+                            {
+                                Title = track.Name,
+                                Subtitle = $"{Resources.ResultSongSubTitle}{(track.Explicit ? $" • {Resources.ResultSongExplicitSubTitle}" : "")} • {Resources.ResultSongBySubTitle} {string.Join(", ", track.Artists.Select(x => x.Name))}",
+                                Icon = new IconInfo(track.Album.Images.OrderBy(x => x.Width * x.Height).FirstOrDefault()?.Url),
+                                MoreCommands = [new AddToQueueCommand(_spotifyClient, track.Uri).ToCommandContextItem()],
+                            }];
+                        }
+                    }
+                    else if (currentStatus.CurrentlyPlayingType == "episode")
+                    {
+                        if (currentStatus.Item is FullEpisode)
+                        {
+                            var episode = currentStatus.Item as FullEpisode;
+                            return [new ListItem(new TogglePlaybackCommand(_spotifyClient))
+                            {
+                                Title = episode.Name,
+                                Subtitle = $"{Resources.ResultSongSubTitle}{(episode.Explicit ? $" • {Resources.ResultSongExplicitSubTitle}" : "")} • {Resources.ResultSongBySubTitle} {string.Join(", ", episode.Show.Name)}",
+                                Icon = new IconInfo(episode.Images.OrderBy(x => x.Width * x.Height).FirstOrDefault()?.Url),
+                                MoreCommands = [new AddToQueueCommand(_spotifyClient, episode.Uri).ToCommandContextItem()],
+                            }];
+                        }
+                    }
+
+                    // no item available, or a hitherto unsupported one
+                    return [new ListItem(new TogglePlaybackCommand(_spotifyClient))
+                    {
+                        Icon = (currentStatus.IsPlaying) ? Icons.Pause : Icons.Play
+                    }];
+                }
+
             return [];
         }
 
-        try
-        {
             var results = await GetSearchItemsAsync(search, searchFilter);
             if (results.Count == 0)
                 EmptyContent = new CommandItem()
@@ -130,6 +174,7 @@ internal sealed partial class SpotifyListPage : DynamicListPage
         }
         catch (Exception ex)
         {
+            Debug.WriteLine(ex);
             EmptyContent = new CommandItem() { 
                 Title = Resources.EmptyErrorTitle,
             };
