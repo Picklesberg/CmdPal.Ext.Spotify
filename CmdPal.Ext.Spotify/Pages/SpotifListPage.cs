@@ -32,14 +32,16 @@ internal sealed partial class SpotifyListPage : DynamicListPage
         Name = Resources.ExtensionDisplayName;
 
         _settingsManager = settingsManager;
-        _settingsManager.Settings.SettingsChanged += (_, _) => SearchAsync(SearchText);
+        //_settingsManager.Settings.SettingsChanged += (_, _) => SearchAsync(SearchText);
 
         _localTypeFilters = [Resources.SearchTypeAlbum, Resources.SearchTypeArtist, Resources.SearchTypePlaylist, Resources.SearchTypeTrack];
 
-        var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CmdPal.Ext.Spotify");
-        _credentialsPath = Path.Combine(appDataPath, "credentials.json");
+        //var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CmdPal.Ext.Spotify");
+        var directory = Utilities.BaseSettingsPath("Microsoft.CmdPal");
+        Directory.CreateDirectory(directory);
+        _credentialsPath = Path.Combine(directory, "credentials.json");
 
-        _items = [.. GetItems(string.Empty).GetAwaiter().GetResult()];
+        //_items = [.. GetItems(string.Empty).GetAwaiter().GetResult()];
 
         EmptyContent = _defaultEmptyContent;
     }
