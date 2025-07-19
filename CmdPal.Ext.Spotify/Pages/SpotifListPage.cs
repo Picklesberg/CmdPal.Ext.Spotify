@@ -223,7 +223,7 @@ internal sealed partial class SpotifyListPage : DynamicListPage
 
     private SearchRequest.Types ApplySearchFilter(ref string search)
     {
-        var wildcard = _settingsManager.FilterWildcard;
+        var wildcard = _settingsManager.FilterWildcard ?? "/";
         /* 
          * This pattern filters results using the 'types' parameter.
          * Allowed values: "album", "artist", "playlist", "track", "show", "episode", "audiobook"
